@@ -13,12 +13,12 @@ let pokemonList = [{name: "Eevee", height: 5, type: ["water", " fire", " bolt"]}
 //i++ is to iterate through the array
 //put spacing where needed in strings
 for (let i = 0; i < pokemonList.length; i++) {
-  document.write(pokemonList[i].name + " (height: " + pokemonList[i].height + ")")
+  document.write(pokemonList[i].name + " (height: " + pokemonList[i].height + ")");
   if (pokemonList[i].height <= 5) {
-    document.write(" \n-This is a small pokemon");
+    document.write(" -This is a small pokemon" + "<br>");
   } else if (pokemonList[i].height === 6) {
-    document.write(" -This is an average pokemon");
+    document.write(" -This is an average pokemon" + "<br>");
   } else if (pokemonList[i].height >= 7 ) {
-    document.write(" -Wow, that's big!");
+    document.write(" -Wow, that's big!" + "<br>");
   }
 }
