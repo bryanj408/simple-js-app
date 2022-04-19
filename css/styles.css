@@ -1,1 +1,10 @@
-f
+body {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: var(--text-color);
+  line-height: 1.6;
+  background-color: var(--page-color);
+  display: inline-flex;
+  
+}
