@@ -1,3 +1,4 @@
+/*sets the body styling of the page*/
 body {
   text-align: center;
   font-family: 'Barlow', sans-serif;
@@ -9,10 +10,12 @@ body {
   display: inline-flex;
 }
 
+/*Can change background color anytime*/
 div {
   background-color: lightblue;
 }
 
+/*Set button styling(background color to match white page)*/
 .button-class {
   background-color: #4caf50; /* Green */
   border: none;
