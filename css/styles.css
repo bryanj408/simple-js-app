@@ -1,35 +1,61 @@
 /*sets the body styling of the page*/
+header {
+    font-size: 10px;
+    padding: 5px;
+}
+
 body {
   text-align: center;
   font-family: 'Barlow', sans-serif;
   font-weight: 400;
   font-size: 16px;
-  color: var(--text-color);
-  line-height: 1.6;
-  background-color: var(--page-color);
-  display: inline-flex;
-}
-
-/*Can change background color anytime*/
-div {
+  line-height: 1.5;
   background-color: lightblue;
 }
 
-/*Set button styling(background color to match white page)*/
-.button-class {
-  background-color: #4caf50; /* Green */
-  border: none;
-  color: white;
-  padding: 16px 32px;
+h1 {
+  color: green;
+}
+
+.pokemon-list {
   text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  -webkit-transition-duration: 0.4s; /* Safari */
-  transition-duration: 0.4s;
+  display: inline;
+  width: 100%;
+  list-style-type: none;
+  padding: 50px;
+}
+
+.show-modal {
+  display: none;
+}
+
+#modal-container.is-visible {
+	position: fixed;
+	padding: 20px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  border: 5px solid;
+  transition-duration: 0.3s;
+  top: 50px;
+  left: 340px;
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
+  background: white;
+  opacity: 90%;
+}
+
+li {
+  border: 5px;
+  padding: 5px;
+}
+
+button.button-class {
+  width: 25%;
+  padding: 10px;
+}
+
+button.button-class: hover, button.button-class: focus {
   cursor: pointer;
-  background-color: white;
-  color: black;
-  border: 2px solid #4caf50;
+  opacity: 0.50%;
 }

@@ -3,63 +3,56 @@
 //document.write() actually writes on the page
 //&&(and)  ||(or)
 
-/*
-for (let i = 0; i < pokemonList.length; i++) {
-  document.write(pokemonList[i].name + " (height: " + pokemonList[i].height + ")");
-  if (pokemonList[i].height <= 5) {
-    document.write(" -This is a small pokemon" + "<br>");
-  } else if (pokemonList[i].height === 6) {
-    document.write(" -This is an average pokemon" + "<br>");
-  } else if (pokemonList[i].height >= 7 ) {
-    document.write(" -Wow, that's big!" + "<br>");
-  }
-}
-
-//Added 3 pokemon in pokemonList and added arrays to each type
-let pokemonList = [{name: "Eevee", height: 5, type: ["water", " fire", " bolt"]},
-{name: " Weedle", height: 6, type: ["drill", " fire"]},
-{name: " Squirtle", height: 7, type: ["water", " strength"]}];
-*/
-
 /*created IFFE function to protect it from outside global variables*/
 let pokemonRepository = (function() {
 //emptied static array to be filled by api
 let pokemonList = [];
-//added in api
+//added in api (external data)
 let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=150';
-/* added an alert pop-up in case credentials were not met. pokemon.push to add pokemon*/
-function add(pokemon) {
-  if (typeof pokemon === 'object' && 'name' in pokemon) {
-    pokemonList.push(pokemon);
-  } else {
-    alert("Pokemon cannot be added to the list. Please try again");
-  }
-}
+let modalContainer = document.querySelector('#modal-container');
 
-function getAll() {
-  return pokemonList;
-}
+// added an alert pop-up in case credentials were not met. pokemon.push to add pokemon
+add = (pokemon) => pokemonList.push(pokemon);
 
-/*created button elements and selectors. created event listener to react when button clicked*/
+getAll = () => pokemonList;
+
+//created button elements and selectors. created event listener to react when button clicked
 function addListItem(pokemon) {
-  let pokemonlist = document.querySelector('.pokemon-list');
+  let list = document.querySelector('.pokemon-list');
   let listItem = document.createElement('li');
   let button = document.createElement('button');
   button.innerText = pokemon.name;
   button.classList.add('button-class');
   listItem.appendChild(button);
-  pokemonlist.appendChild(listItem);
-  button.addEventListener('click', function(event) {
-    showDetails(pokemon);
-  });
+  list.appendChild(listItem);
+  addEvent(button, pokemon);
 }
+
+function addEvent(button, pokemon) {
+  button.addEventListener('click', function () {
+    showDetails(pokemon);
+  }) ;
+}
+
+//added loadDetails function. this connects with showDetails function below with addEventListener
+function loadDetails(pokemon) {
+      let url = pokemon.detailsUrl;
+      return fetch(url).then(function (response) {
+        return response.json();
+      }).then(function (details) {
+        // Now we add the details to the item
+        pokemon.imageUrl = details.sprites.front_default;
+        pokemon.height = details.height;
+        pokemon.types = details.types;
+      }).catch(function (e) {
+        console.error(e);
+      });
+  }
+
 //added loadlist to fetch api and iterate through pokemonList
 //only wanted to fetch name and url unless clicked, more details will show
 //loads full list of pokemon with console.log(pokemon)
-function loadList() {
-  function showLoadingMessage() {
-    console.log('Loading, please wait...');
-  };
+function loadList(pokemon) {
   return fetch(apiUrl).then(function (response) {
     return response.json();
     }).then(function (json) {
@@ -69,53 +62,194 @@ function loadList() {
           detailsUrl: item.url
         };
         add(pokemon);
-        console.log(pokemon);
       });
     }).catch(function (e) {
       console.error(e);
     })
 }
 
-//added loadDetails function. this connects with showDetails function below with addEventListener
-function loadDetails(item) {
-  function showLoadingMessage() {
-    console.log('Loading, please wait...');
-  };
-      let url = item.detailsUrl;
-      return fetch(url).then(function (response) {
-        return response.json();
-      }).then(function (details) {
-        // Now we add the details to the item
-        item.imageUrl = details.sprites.front_default;
-        item.height = details.height;
-        item.types = details.types;
-      }).catch(function (e) {
-        console.error(e);
-      });
-  }
-
-/*Shows pokemon name in console when button is clicked (showDetails above in function button)*/
-function showDetails(item) {
-  loadDetails(item).then(function () {
-    console.log(item);
+//Actually showing the modal
+function showDetails(pokemon) {
+  loadDetails(pokemon).then(function () {
+    showModal(pokemon);
   });
 }
+//Shows pokemon name in console when button is clicked (showDetails above in function button)
+
+function showModal(pokemon) {
+  //clear all existing modal content
+  modalContainer.innerHTML = '';
+  let modal = document.createElement('div');
+  modal.classList.add('modal');
+
+  //add the new modal content
+  let closeButtonElement = document.createElement('button');
+  closeButtonElement.classList.add('modal-close');
+  closeButtonElement.innerText = 'Close';
+  closeButtonElement.addEventListener('click', hideModal);
+
+  let titleElement = document.createElement('h1');
+  titleElement.innerText = pokemon.name;
+
+  let contentElement = document.createElement('p');
+  contentElement.innerHTML = 'Height: ' + pokemon.height;
+
+  let typeElement = document.createElement('p');
+  typeElement.innerText = 'Types: ';
+
+  let imageElement = document.createElement('img');
+  imageElement.classList.add('modal-image');
+  imageElement.src = pokemon.imageUrl;
+
+  modal.appendChild(closeButtonElement);
+  modal.appendChild(titleElement);
+  modal.appendChild(contentElement);
+  modal.appendChild(imageElement);
+  modalContainer.appendChild(modal);
+
+  modalContainer.classList.add('is-visible');
+}
+//let dialogPromiseReject; setting up later by showDialog
+//selects the modal-container and hides "is visible"
+
+function hideModal() {
+  modalContainer.classList.remove('is-visible');
+}
+
+
+  //keydown is predefined event listener
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && modalContainer.classList.contains('is-visible')) {
+    hideModal();
+  }
+});
+
+//listenes for when user clicks outside of box
+modalContainer.addEventListener('click', (e) => {
+  let target = e.target;
+  if (target === modalContainer)  {
+    hideModal();
+  }
+});
+
+
 
 //returns all funcitons when called
-return {
-  add: add,
-  getAll: getAll,
-  addListItem: addListItem,
-  loadList: loadList,
-  loadDetails: loadDetails,
-  showDetails: showDetails
-}
-})()
+    return {
+      add,
+      getAll,
+      addListItem,
+      loadList,
+      loadDetails,
+      showDetails,
+      addEvent
+    }
+})();
 
-//loops through array of pokemon list
-//added loadlist in iteration
 pokemonRepository.loadList().then(function() {
   pokemonRepository.getAll().forEach(function(pokemon) {
     pokemonRepository.addListItem(pokemon);
+  })
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+//loops through array of pokemon list
+//added loadlist in iteration
+
+
+
+
+
+/*document.querySelector('#show-dialog').addEventListener('click', () => {
+showDialog('Confirm action', 'Are you sure you want to do this?').then(function() {
+    alert('confirmed!');
+  }, () => {
+    alert('not confirmed');
   });
+});*/
+
+
+/*document.querySelector('#show-modal').addEventListener('click', () => {
+  showModal('Modal title', 'This is the modal content!');
 });
+})();*/
+
+
+
+
+/*
+//adding validation for email and password for forms for UI
+function validateForm() {
+  let isValidEmail = validateEmail();
+  let isValidPAssword = validatePassword();
+  return isValidEmail && isValidPAssword;
+}
+
+//validating email with error messages and @ sign
+function validateEmail() {
+  let value = emailInput.value;
+
+  if (!value) {
+    showErrorMessage(emailInput, 'Email is a required field');
+    return false;
+  }
+
+  if (value.indexOf('@') === -1) {
+    shpwErrorMessage(emailInput, 'You must enter a valid email address');
+    return false;
+  }
+
+  showErrorMessage(emailInput, null);
+  return true;
+}
+
+
+function validatePassword() {
+  let value = passwordInput.value;
+  if (!value) {
+    showErrorMessage(passwordInput, 'Password is a required field');
+    return false;
+  }
+
+  if (value.length < 8) {
+    showErrorMessage(passwordInput, 'The password needs to be at least 8 cahracters long.');
+    return false;
+  }
+
+  showErrorMessage(passwordInput, null);
+  return true;
+}
+
+
+function showErrorMessage(input, message) {
+  let container = input.parentElement; //the .input-wrapper
+
+  //remove an existing error
+  let error = container.querySelector('.error-message');
+  if (error) {
+    container.removeChild(error);
+  }
+
+  //now add the error if the message isn't empty
+  if (message) {
+    let error = document.createElement('div');
+    error.classList.add('error-message');
+    error.innerText = message;
+    container.appendChild(error);
+  }
+}
+
+emailInput.addEventListener('input', validateEmail);
+passwordInput.addEventListener('input' validatePassword);
+*/
