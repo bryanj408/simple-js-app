@@ -1,4 +1,4 @@
-/*sets the body styling of the page*/
+/*sets the body styling of the page
 header {
     font-size: 10px;
     padding: 5px;
@@ -59,3 +59,7 @@ button.button-class: hover, button.button-class: focus {
   cursor: pointer;
   opacity: 0.50%;
 }
+
+.page-container {
+margin-top: 600px;
+}*/
