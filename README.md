@@ -4,10 +4,10 @@ This app displays a list of pokemon that is pulled in from an API and shows a br
 
 TECHNOLOGIES USED:
 
-*HTML*
-*CSS*
-*JavaScript*
-*Bootstrap*
+* HTML
+* CSS
+* JavaScript
+* Bootstrap
 
 HOW TO USE APP:
 
