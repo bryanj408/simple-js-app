@@ -63,7 +63,3 @@ button.button-class: hover, button.button-class: focus {
 .page-container {
 margin-top: 600px;
 }
-
-.navbar {
-  position: absolute;
-}
